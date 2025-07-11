@@ -1,0 +1,28 @@
+/* Import Base */
+@import './base/_reset.css';
+@import './base/_variables.css';
+@import './base/_typography.css';
+
+/* Import Components */
+@import './components/_buttons.css';
+@import './components/_forms.css';
+@import './components/_navbar.css';
+
+/* Import Pages */
+@import './pages/_home.css';
+@import './pages/_auth.css';
+@import './pages/_profile.css';
+
+Global Styles
+body {
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  background-color: var(--bg-color);
+  color: var(--text-color);
+}
+
+.container {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 var(--spacing-md);
+}

@@ -1,0 +1,94 @@
+/* Form Container */
+.form-container {
+  max-width: 600px;
+  margin: 2rem auto;
+  padding: 2rem;
+  background-color: var(--bg-color-light);
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Form Group (for spacing) */
+.form-group {
+  margin-bottom: 1.5rem;
+}
+
+/* Labels */
+label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+  color: var(--text-color-dark);
+  font-size: 0.9rem;
+}
+
+/* Inputs, Textareas, Selects */
+input,
+textarea,
+select {
+  width: 100%;
+  padding: 0.75rem;
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  font-family: inherit;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+  background-color: var(--bg-color-input);
+  color: var(--text-color);
+}
+
+/* Input Focus Effects */
+input:focus,
+textarea:focus,
+select:focus {
+  outline: none;
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 3px rgba(var(--primary-color-rgb), 0.1);
+}
+
+/* Textarea Specific Styles */
+textarea {
+  min-height: 120px;
+  resize: vertical;
+}
+
+/* Select Dropdown Arrow */
+select {
+  appearance: none;
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+  background-repeat: no-repeat;
+  background-position: right 0.75rem center;
+  background-size: 1rem;
+}
+
+/* Checkbox & Radio Buttons */
+input[type="checkbox"],
+input[type="radio"] {
+  width: auto;
+  margin-right: 0.5rem;
+}
+
+/* Validation States */
+input:invalid,
+textarea:invalid {
+  border-color: var(--error-color);
+}
+
+input:valid,
+textarea:valid {
+  border-color: var(--success-color);
+}
+
+/* Placeholder Styling */
+::placeholder {
+  color: var(--text-color-light);
+  opacity: 0.7;
+}
+
+/* Disabled Inputs */
+input:disabled,
+textarea:disabled,
+select:disabled {
+  background-color: var(--bg-color-disabled);
+  cursor: not-allowed;
+}
