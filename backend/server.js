@@ -1,7 +1,8 @@
 const express = require("express");
 const dotenv = require("dotenv");
 const cors = require("cors");
-const router = require("./routers/userRoutes")
+const router = require("./routers/userRoutes");
+// const postRouter = require("./routers/postRoutes")
 const mongoDB = require("./config/db")
 dotenv.config();
 
@@ -19,6 +20,7 @@ const corsOptions = {
 app.use(cors(corsOptions));
 
 app.use("/auth",router);
+// app.use("/auth",postRouter);
 
 const PORT = process.env.PORT
 app.listen(PORT,()=>{

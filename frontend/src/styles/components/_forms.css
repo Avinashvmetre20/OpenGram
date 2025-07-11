@@ -1,25 +1,35 @@
+/* _forms.css */
+
 /* Form Container */
 .form-container {
-  max-width: 600px;
-  margin: 2rem auto;
-  padding: 2rem;
-  background-color: var(--bg-color-light);
-  border-radius: 8px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  max-width: 28rem; /* 448px - more refined width */
+  margin: var(--spacing-xl) auto;
+  padding: var(--spacing-xl);
+  background-color: var(--white);
+  border-radius: var(--border-radius-lg);
+  border: 1px solid var(--border-color);
+  box-shadow: var(--shadow-sm);
+  transition: var(--transition-normal);
 }
 
-/* Form Group (for spacing) */
+.form-container:hover {
+  box-shadow: var(--shadow-md);
+}
+
+/* Form Group */
 .form-group {
-  margin-bottom: 1.5rem;
+  margin-bottom: var(--spacing-lg);
+  position: relative;
 }
 
 /* Labels */
 label {
   display: block;
-  margin-bottom: 0.5rem;
-  font-weight: 600;
-  color: var(--text-color-dark);
-  font-size: 0.9rem;
+  margin-bottom: var(--spacing-sm);
+  font-weight: var(--font-medium);
+  color: var(--gray-700);
+  font-size: var(--text-sm);
+  letter-spacing: 0.025em;
 }
 
 /* Inputs, Textareas, Selects */
@@ -27,14 +37,15 @@ input,
 textarea,
 select {
   width: 100%;
-  padding: 0.75rem;
+  padding: var(--spacing-sm) var(--spacing-md);
   border: 1px solid var(--border-color);
-  border-radius: 6px;
-  font-family: inherit;
-  font-size: 1rem;
-  transition: all 0.3s ease;
-  background-color: var(--bg-color-input);
-  color: var(--text-color);
+  border-radius: var(--border-radius-sm);
+  font-family: var(--font-family-sans);
+  font-size: var(--text-base);
+  transition: var(--transition-normal);
+  background-color: var(--white);
+  color: var(--gray-800);
+  line-height: var(--line-height-normal);
 }
 
 /* Input Focus Effects */
@@ -42,53 +53,111 @@ input:focus,
 textarea:focus,
 select:focus {
   outline: none;
-  border-color: var(--primary-color);
-  box-shadow: 0 0 0 3px rgba(var(--primary-color-rgb), 0.1);
+  border-color: var(--primary-500);
+  box-shadow: var(--shadow-primary);
+  background-color: var(--white);
 }
 
 /* Textarea Specific Styles */
 textarea {
-  min-height: 120px;
+  min-height: 8rem; /* 128px */
   resize: vertical;
+  line-height: var(--line-height-relaxed);
 }
 
-/* Select Dropdown Arrow */
+/* Select Dropdown */
 select {
   appearance: none;
-  background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%236B7280' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
   background-repeat: no-repeat;
-  background-position: right 0.75rem center;
+  background-position: right var(--spacing-md) center;
   background-size: 1rem;
+  padding-right: var(--spacing-xl);
 }
 
 /* Checkbox & Radio Buttons */
+.checkbox-group,
+.radio-group {
+  display: flex;
+  align-items: center;
+  margin-bottom: var(--spacing-sm);
+}
+
 input[type="checkbox"],
 input[type="radio"] {
-  width: auto;
-  margin-right: 0.5rem;
+  width: 1.125rem;
+  height: 1.125rem;
+  margin-right: var(--spacing-sm);
+  accent-color: var(--primary-600);
 }
 
 /* Validation States */
-input:invalid,
-textarea:invalid {
-  border-color: var(--error-color);
+.input-error {
+  border-color: var(--danger-500);
 }
 
-input:valid,
-textarea:valid {
-  border-color: var(--success-color);
+.input-success {
+  border-color: var(--success-500);
+}
+
+.input-error:focus {
+  box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1);
+}
+
+/* Error/Success Messages */
+.form-feedback {
+  font-size: var(--text-xs);
+  margin-top: var(--spacing-xs);
+  display: flex;
+  align-items: center;
+}
+
+.form-feedback.error {
+  color: var(--danger-600);
+}
+
+.form-feedback.success {
+  color: var(--success-600);
 }
 
 /* Placeholder Styling */
 ::placeholder {
-  color: var(--text-color-light);
-  opacity: 0.7;
+  color: var(--gray-400);
+  opacity: 1; /* Fix for Firefox */
 }
 
 /* Disabled Inputs */
 input:disabled,
 textarea:disabled,
 select:disabled {
-  background-color: var(--bg-color-disabled);
+  background-color: var(--gray-50);
+  color: var(--gray-500);
   cursor: not-allowed;
+  opacity: 1; /* Fix for iOS */
+}
+
+/* Floating Labels Variant */
+.floating-label-group {
+  position: relative;
+  margin-bottom: var(--spacing-lg);
+}
+
+.floating-label {
+  position: absolute;
+  top: 0.75rem;
+  left: var(--spacing-md);
+  font-size: var(--text-base);
+  color: var(--gray-500);
+  transition: var(--transition-fast);
+  pointer-events: none;
+  background: var(--white);
+  padding: 0 var(--spacing-xs);
+}
+
+.floating-input:focus + .floating-label,
+.floating-input:not(:placeholder-shown) + .floating-label {
+  top: -0.5rem;
+  font-size: var(--text-xs);
+  color: var(--primary-600);
+  background: var(--white);
 }

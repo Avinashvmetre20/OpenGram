@@ -4,10 +4,10 @@ import LoadingSpinner from '../common/LoadingSpinner';
 import AccessDenied from '../common/AccessDenied';
 import './ProtectedRoute.css';
 
-const ProtectedRoute = ({ 
-  children, 
-  adminOnly = false, 
-  roles = [], 
+const ProtectedRoute = ({
+  children,
+  adminOnly = false,
+  roles = [],
   redirectPath = '/login',
   showDenied = true
 }) => {
@@ -30,15 +30,15 @@ const ProtectedRoute = ({
   }
 
   // Check if specific roles are required
-  const hasRequiredRole = roles.length === 0 || 
-                         (user?.role && roles.includes(user.role));
+  const hasRequiredRole = roles.length === 0 ||
+    (user?.role && roles.includes(user.role));
 
   // Check admin access if required
   const isAdminAccessValid = !adminOnly || user?.role === 'admin';
 
   if (!hasRequiredRole || !isAdminAccessValid) {
     return showDenied ? (
-      <AccessDenied 
+      <AccessDenied
         requiredRoles={adminOnly ? ['admin'] : roles}
         currentRole={user?.role}
       />

@@ -1,9 +1,9 @@
 import { useState, useEffect } from 'react';
 import { useAuth } from '../../context/AuthContext';
-import { 
-  createAdminUser, 
-  fetchAllUsers, 
-  deleteUser 
+import {
+  createAdminUser,
+  fetchAllUsers,
+  deleteUser
 } from '../../services/adminService';
 import UserTable from '../../components/admin/UserTable';
 import CreateAdminModal from '../../components/admin/CreateAdminModal';
@@ -28,7 +28,7 @@ const AdminDashboard = () => {
         setLoading(false);
       }
     };
-    
+
     loadUsers();
   }, []);
 
@@ -64,24 +64,24 @@ const AdminDashboard = () => {
 
   return (
     <div className="admin-dashboard">
-      <AdminPanel 
+      <AdminPanel
         userCount={users.length}
         onAddAdmin={() => setIsModalOpen(true)}
       />
-      
+
       {error && <div className="error-message">{error}</div>}
-      
+
       {loading ? (
         <div className="loading-spinner">Loading users...</div>
       ) : (
-        <UserTable 
-          users={users} 
+        <UserTable
+          users={users}
           onDelete={handleDeleteUser}
           currentUserId={user._id}
         />
       )}
-      
-      <CreateAdminModal 
+
+      <CreateAdminModal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
         onSubmit={handleCreateAdmin}

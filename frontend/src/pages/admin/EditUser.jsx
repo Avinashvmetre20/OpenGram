@@ -27,7 +27,7 @@ const EditUser = () => {
         setFormData({
           username: data.username,
           email: data.email,
-          password: '', // Never pre-fill password
+          password: '',
           role: data.role,
           bio: data.bio || '',
           isVerified: data.isVerified

@@ -36,7 +36,7 @@ function App() {
             path="/ProfileSide"
             element={
               <ProtectedRoute>
-                <Profile />
+                <ProfileSide />
               </ProtectedRoute>
             }
           />
