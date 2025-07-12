@@ -4,6 +4,7 @@ import ProtectedRoute from './components/common/ProtectedRoute';
 import Login from './pages/auth/Login';
 import Register from './pages/auth/Register';
 import Profile from './pages/profile/Profile';
+// import PostList from './pages/profile/PostList';
 import ProfileSide from './pages/profile/ProfileSide';
 import EditProfile from './pages/profile/EditProfile';
 import Home from './pages/Home';
@@ -24,7 +25,7 @@ function App() {
 
           {/* Protected User Routes */}
           <Route
-            path="/profile"
+            path="/Profile"
             element={
               <ProtectedRoute>
                 <Profile />

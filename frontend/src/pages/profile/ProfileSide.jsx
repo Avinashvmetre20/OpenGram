@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useAuth } from '../../context/AuthContext';
 import { Link } from 'react-router-dom';
-import "./profile.css";
+import "./profileSide.css";
 
 const profileSide = () => {
   const { user, logout, updatePassword } = useAuth();

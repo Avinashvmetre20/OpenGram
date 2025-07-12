@@ -12,7 +12,7 @@ const app = express();
 app.use(express.json());
 // Configure CORS properly
 const corsOptions = {
-  origin: '*', // Your frontend origin
+  origin: 'http://localhost:5173', // Your frontend origin
   credentials: true, // Allow credentials
   optionsSuccessStatus: 200
 };
