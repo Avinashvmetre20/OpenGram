@@ -122,6 +122,24 @@ PostSchema.index({ hashtags: 1 });
 PostSchema.index({ likes: 1 });
 PostSchema.index({ 'media.mediaType': 1 });
 
+PostSchema.pre('remove', async function(next) {
+  await Comment.deleteMany({ post: this._id });
+  next();
+});
+
+PostSchema.methods.getMediaUrls = function(options = {}) {
+  return this.media.map(mediaItem => {
+    if (!mediaItem.url) return null;
+    const url = new URL(mediaItem.url);
+    if (mediaItem.mediaType === 'image') {
+      url.searchParams.set('q', 'auto');
+      if (options.width) url.searchParams.set('w', options.width);
+      if (options.height) url.searchParams.set('h', options.height);
+    }
+    return url.toString();
+  }).filter(Boolean);
+};
+
 const Post = mongoose.model('Post', PostSchema);
 
 module.exports = Post;
