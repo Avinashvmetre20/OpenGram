@@ -12,7 +12,7 @@ const Home = () => {
         <div className="welcome-message">
           <p>Hello {user.username}!</p>
           <div className="action-buttons">
-            <Link to="/profile" className="btn btn-primary">View Profile</Link>
+            <Link to="/PostPage" className="btn btn-primary">View PostPage</Link>
             {user.role === 'admin' && (
               <Link to="/admin" className="btn btn-outline">Admin Dashboard</Link>
             )}

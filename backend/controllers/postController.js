@@ -207,18 +207,25 @@ exports.deletePost = asyncHandler(async (req, res, next) => {
 // @route   PUT /api/posts/:id/like
 // @access  Private
 exports.likePost = asyncHandler(async (req, res, next) => {
-  const post = await Post.findByIdAndUpdate(
+  const post = await Post.findById(req.params.id);
+
+  // Check if user already liked the post
+  if (post.likes.some(like => like.toString() === req.user.id)) {
+    return ;
+  }
+
+  const updatedPost = await Post.findByIdAndUpdate(
     req.params.id,
     {
       $addToSet: { likes: req.user.id },
       $inc: { likeCount: 1 }
     },
-    { new: true }
-  );
+    { new: true, runValidators: true }
+  ).populate('likes', 'username profilePicture');
 
   res.status(200).json({
     success: true,
-    data: post
+    data: updatedPost
   });
 });
 
@@ -226,18 +233,41 @@ exports.likePost = asyncHandler(async (req, res, next) => {
 // @route   DELETE /api/posts/:id/like
 // @access  Private
 exports.unlikePost = asyncHandler(async (req, res, next) => {
-  const post = await Post.findByIdAndUpdate(
+  const post = await Post.findById(req.params.id);
+  // Check if user hasn't liked the post
+  if (!post.likes.some(like => like.toString() === req.user.id)) {
+    return ;
+  }
+  const updatedPost = await Post.findByIdAndUpdate(
     req.params.id,
     {
       $pull: { likes: req.user.id },
       $inc: { likeCount: -1 }
     },
-    { new: true }
-  );
+    { new: true, runValidators: true }
+  ).populate('likes', 'username profilePicture');
 
   res.status(200).json({
     success: true,
-    data: post
+    data: updatedPost
+  });
+});
+
+// @desc    Get users who liked a post
+// @route   GET /api/posts/:id/likes
+// @access  Private
+exports.getPostLikes = asyncHandler(async (req, res, next) => {
+  const post = await Post.findById(req.params.id)
+    .populate('likes', 'username profilePicture');
+
+  if (!post) {
+    return next(new ErrorResponse(`Post not found with id of ${req.params.id}`, 404));
+  }
+
+  res.status(200).json({
+    success: true,
+    count: post.likes.length,
+    data: post.likes
   });
 });
 
@@ -437,24 +467,6 @@ exports.getPostReplies = asyncHandler(async (req, res, next) => {
     success: true,
     count: replies.length,
     data: replies
-  });
-});
-
-// @desc    Get users who liked a post
-// @route   GET /api/posts/:id/likes
-// @access  Private
-exports.getPostLikes = asyncHandler(async (req, res, next) => {
-  const post = await Post.findById(req.params.id)
-    .populate('likes', 'username profilePicture');
-
-  if (!post) {
-    return next(new ErrorResponse(`Post not found with id of ${req.params.id}`, 404));
-  }
-
-  res.status(200).json({
-    success: true,
-    count: post.likes.length,
-    data: post.likes
   });
 });
 

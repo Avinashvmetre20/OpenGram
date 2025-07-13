@@ -3,7 +3,7 @@ import { AuthProvider } from './context/AuthContext';
 import ProtectedRoute from './components/common/ProtectedRoute';
 import Login from './pages/auth/Login';
 import Register from './pages/auth/Register';
-import Profile from './pages/profile/Profile';
+import PostPage from './pages/profile/PostPage';
 // import PostList from './pages/profile/PostList';
 import ProfileSide from './pages/profile/ProfileSide';
 import EditProfile from './pages/profile/EditProfile';
@@ -25,10 +25,10 @@ function App() {
 
           {/* Protected User Routes */}
           <Route
-            path="/Profile"
+            path="/PostPage"
             element={
               <ProtectedRoute>
-                <Profile />
+                <PostPage />
               </ProtectedRoute>
             }
           />

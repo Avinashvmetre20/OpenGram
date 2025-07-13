@@ -22,7 +22,7 @@ const LoginForm = () => {
     e.preventDefault();
     try {
       await login(formData);
-      navigate('/profile');
+      navigate('/PostPage');
     } catch (err) {
       setError(err.response?.data?.error || 'Login failed');
     }
