@@ -2,6 +2,7 @@
 const Post = require('../models/Post');
 const User = require('../models/User');
 const Comment = require('../models/Comment');
+const Like = require('../models/Like');
 const ErrorResponse = require('../utils/errorResponse');
 const asyncHandler = require('../middlewares/async');
 
@@ -75,20 +76,40 @@ exports.getAllPosts = asyncHandler(async (req, res, next) => {
         path: 'user',
         select: 'username profilePicture'
       }
-    })
-    .populate({
-      path: 'likes',
-      select: 'username profilePicture',
-      options: { limit: 5 }
     });
+
+  // Efficiently get like counts and user like status using optimized methods
+  const postIds = posts.map(post => post._id);
+  
+  // Get like counts for all posts in one query
+  const likeCounts = await Like.getLikeCounts(postIds);
+
+  // Get user's likes for all posts in one query
+  const userLikes = await Like.getUserLikedPosts(req.user.id, postIds);
+
+  // Create lookup maps for O(1) access
+  const likeCountMap = {};
+  likeCounts.forEach(item => {
+    likeCountMap[item._id.toString()] = item.count;
+  });
+
+  const userLikedPosts = new Set(userLikes.map(like => like.post.toString()));
+
+  // Attach like data to posts
+  const postsWithLikes = posts.map(post => {
+    const postObj = post.toObject();
+    postObj.likeCount = likeCountMap[post._id.toString()] || 0;
+    postObj.isLiked = userLikedPosts.has(post._id.toString());
+    return postObj;
+  });
 
   res.status(200).json({
     success: true,
-    count: posts.length,
+    count: postsWithLikes.length,
     total,
     pages: Math.ceil(total / limit),
     currentPage: page,
-    data: posts
+    data: postsWithLikes
   });
 });
 
@@ -209,23 +230,39 @@ exports.deletePost = asyncHandler(async (req, res, next) => {
 exports.likePost = asyncHandler(async (req, res, next) => {
   const post = await Post.findById(req.params.id);
 
-  // Check if user already liked the post
-  if (post.likes.some(like => like.toString() === req.user.id)) {
-    return ;
+  if (!post) {
+    return next(new ErrorResponse(`Post not found with id of ${req.params.id}`, 404));
   }
 
-  const updatedPost = await Post.findByIdAndUpdate(
-    req.params.id,
-    {
-      $addToSet: { likes: req.user.id },
-      $inc: { likeCount: 1 }
-    },
-    { new: true, runValidators: true }
-  ).populate('likes', 'username profilePicture');
+  // Check if user already liked the post
+  const existingLike = await Like.findOne({
+    user: req.user.id,
+    post: req.params.id
+  });
+
+  if (existingLike) {
+    return res.status(400).json({
+      success: false,
+      message: 'Post already liked'
+    });
+  }
+
+  // Create new like
+  await Like.create({
+    user: req.user.id,
+    post: req.params.id
+  });
+
+  // Get updated like count using optimized method
+  const likeCount = await Like.getLikeCount(req.params.id);
 
   res.status(200).json({
     success: true,
-    data: updatedPost
+    data: {
+      postId: req.params.id,
+      likeCount,
+      liked: true
+    }
   });
 });
 
@@ -234,22 +271,37 @@ exports.likePost = asyncHandler(async (req, res, next) => {
 // @access  Private
 exports.unlikePost = asyncHandler(async (req, res, next) => {
   const post = await Post.findById(req.params.id);
-  // Check if user hasn't liked the post
-  if (!post.likes.some(like => like.toString() === req.user.id)) {
-    return ;
+
+  if (!post) {
+    return next(new ErrorResponse(`Post not found with id of ${req.params.id}`, 404));
   }
-  const updatedPost = await Post.findByIdAndUpdate(
-    req.params.id,
-    {
-      $pull: { likes: req.user.id },
-      $inc: { likeCount: -1 }
-    },
-    { new: true, runValidators: true }
-  ).populate('likes', 'username profilePicture');
+
+  // Check if user has liked the post
+  const existingLike = await Like.findOne({
+    user: req.user.id,
+    post: req.params.id
+  });
+
+  if (!existingLike) {
+    return res.status(400).json({
+      success: false,
+      message: 'Post not liked'
+    });
+  }
+
+  // Remove like
+  await Like.findByIdAndDelete(existingLike._id);
+
+  // Get updated like count using optimized method
+  const likeCount = await Like.getLikeCount(req.params.id);
 
   res.status(200).json({
     success: true,
-    data: updatedPost
+    data: {
+      postId: req.params.id,
+      likeCount,
+      liked: false
+    }
   });
 });
 
@@ -257,17 +309,20 @@ exports.unlikePost = asyncHandler(async (req, res, next) => {
 // @route   GET /api/posts/:id/likes
 // @access  Private
 exports.getPostLikes = asyncHandler(async (req, res, next) => {
-  const post = await Post.findById(req.params.id)
-    .populate('likes', 'username profilePicture');
+  const post = await Post.findById(req.params.id);
 
   if (!post) {
     return next(new ErrorResponse(`Post not found with id of ${req.params.id}`, 404));
   }
 
+  const likes = await Like.find({ post: req.params.id })
+    .populate('user', 'username profilePicture')
+    .sort('-createdAt');
+
   res.status(200).json({
     success: true,
-    count: post.likes.length,
-    data: post.likes
+    count: likes.length,
+    data: likes.map(like => like.user)
   });
 });
 

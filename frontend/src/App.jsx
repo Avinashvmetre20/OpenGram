@@ -11,6 +11,7 @@ import Home from './pages/Home';
 import AdminDashboard from './pages/admin/Dashboard';
 import EditUser from './pages/admin/EditUser';
 import Navbar from './components/common/Navbar';
+import UserProfile from './pages/profile/UserProfile';
 
 function App() {
   return (
@@ -47,6 +48,15 @@ function App() {
             element={
               <ProtectedRoute>
                 <EditProfile />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path="/users/:id"
+            element={
+              <ProtectedRoute>
+                <UserProfile />
               </ProtectedRoute>
             }
           />

@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import download from '../../assets/download.jpeg';
 import './PostList.css'; // optional: for styling
 
 const PostList = () => {
@@ -43,7 +44,15 @@ const fetchPosts = async () => {
         <div key={post._id} className="post-card">
           {/* User Info */}
           <div className="user-info">
-            <img src={post.user.profilePicture} alt="Profile" className="avatar" />
+            <img 
+              src={post.user.profilePicture || download} 
+              alt="Profile" 
+              className="avatar"
+              onError={(e) => {
+                e.target.onerror = null;
+                e.target.src = download;
+              }}
+            />
             <span className="username">{post.user.username}</span>
           </div>
 
@@ -79,7 +88,15 @@ const fetchPosts = async () => {
             <strong>Comments ({post.commentCount}):</strong>
             {post.comments.map(comment => (
               <div key={comment._id} className="comment">
-                <img src={comment.user.profilePicture} alt="Commenter" className="avatar-small" />
+                <img 
+                  src={comment.user.profilePicture || download} 
+                  alt="Commenter" 
+                  className="avatar-small"
+                  onError={(e) => {
+                    e.target.onerror = null;
+                    e.target.src = download;
+                  }}
+                />
                 <span className="comment-user">{comment.user.username}</span>: {comment.text}
               </div>
             ))}

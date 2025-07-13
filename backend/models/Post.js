@@ -27,14 +27,6 @@ const PostSchema = new mongoose.Schema({
       duration: Number  // For video duration
     }
   ],
-  likes: [{
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'User'
-  }],
-  likeCount: {
-    type: Number,
-    default: 0
-  },
   comments: [{
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Comment'
@@ -115,11 +107,19 @@ const PostSchema = new mongoose.Schema({
   timestamps: true
 });
 
+// Virtual for likeCount - will be populated by controller
+PostSchema.virtual('likeCount').get(function() {
+  return this._likeCount || 0;
+});
+
+PostSchema.virtual('isLiked').get(function() {
+  return this._isLiked || false;
+});
+
 // Indexes for better performance
 PostSchema.index({ user: 1 });
 PostSchema.index({ createdAt: -1 });
 PostSchema.index({ hashtags: 1 });
-PostSchema.index({ likes: 1 });
 PostSchema.index({ 'media.mediaType': 1 });
 
 PostSchema.pre('remove', async function(next) {

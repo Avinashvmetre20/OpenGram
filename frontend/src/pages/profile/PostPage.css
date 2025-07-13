@@ -40,54 +40,94 @@
   box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
 }
 
-/* User Info */
-.user-info {
-  display: flex;
-  align-items: center;
+/* Post Header */
+.post-header {
   margin-bottom: 15px;
 }
 
-.avatar {
-  width: 50px;
-  height: 50px;
-  border-radius: 50%;
-  object-fit: cover;
-  margin-right: 12px;
-  border: 2px solid #f0f0f0;
-  transition: transform 0.3s ease;
-}
-
-.avatar:hover {
-  transform: scale(1.1);
-}
-
-.avatar-placeholder {
-  width: 50px;
-  height: 50px;
-  border-radius: 50%;
-  background-color: #6c5ce7;
-  color: white;
+.post-header-row {
   display: flex;
   align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  width: 100%;
+}
+
+.avatar-container {
+  flex-shrink: 0;
+}
+
+.avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: none;
+}
+
+.user-details-col {
+  display: flex;
+  flex-direction: column;
   justify-content: center;
-  font-size: 1.4rem;
-  font-weight: bold;
-  margin-right: 12px;
+  min-width: 0;
+  flex: 1;
+}
+
+.display-name {
+  font-weight: 700;
+  font-size: 1rem;
+  color: #222;
+  line-height: 1.2;
 }
 
 .username {
+  font-weight: 400;
+  font-size: 0.92rem;
+  color: #555;
+  line-height: 1.2;
+}
+
+.follow-btn {
+  background: #1da1f2;
+  color: #fff;
+  border: none;
+  border-radius: 999px;
+  padding: 6px 18px;
   font-weight: 600;
-  font-size: 1.1rem;
-  color: #333;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+  outline: none;
+}
+
+.follow-btn:hover {
+  background: #0d8ddb;
+}
+
+.follow-btn.following {
+  background: #fff;
+  color: #1da1f2;
+  border: 1px solid #1da1f2;
+}
+
+.follow-btn.following:hover {
+  background: #e8f5fd;
+  color: #0d8ddb;
+  border: 1px solid #0d8ddb;
+}
+
+.post-time {
+  font-weight: 400;
+  font-size: 0.9rem;
+  color: #666;
+  line-height: 1.2;
 }
 
 .pinned-badge {
-  margin-left: 10px;
   font-size: 0.8rem;
-  background-color: #f5f5f5;
-  padding: 3px 8px;
-  border-radius: 12px;
   color: #666;
+  display: flex;
+  align-items: center;
 }
 
 /* Content */
@@ -215,22 +255,7 @@
   color: #6c5ce7;
 }
 
-.like-button {
-  background: none;
-  border: none;
-  cursor: pointer;
-  padding: 5px 10px;
-  border-radius: 20px;
-  transition: all 0.3s ease;
-}
 
-.like-button:hover {
-  background-color: rgba(108, 92, 231, 0.1);
-}
-
-.like-button.liked {
-  color: #e74c3c;
-}
 
 /* Comments Preview */
 .comments-preview {
@@ -402,18 +427,26 @@
   }
   
   .avatar {
-    width: 40px;
-    height: 40px;
+    width: 36px;
+    height: 36px;
   }
   
   .avatar-placeholder {
-    width: 40px;
-    height: 40px;
-    font-size: 1.2rem;
+    width: 36px;
+    height: 36px;
+    font-size: 1rem;
+  }
+  
+  .display-name {
+    font-size: 0.95rem;
   }
   
   .username {
-    font-size: 1rem;
+    font-size: 0.85rem;
+  }
+  
+  .post-time {
+    font-size: 0.85rem;
   }
   
   .content p {
@@ -517,24 +550,7 @@
   box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
 }
 
-/* Like Button Styles */
-.like-button {
-  transition: all 0.2s ease;
-  cursor: pointer;
-}
 
-.like-button.liked {
-  color: #e74c3c;
-}
-
-.like-button:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
-}
-
-.like-button:disabled:hover {
-  background-color: transparent !important;
-}
 
 /* Animations */
 @keyframes fadeIn {
@@ -572,42 +588,164 @@
   }
 }
 
-/* Like Button Styles */
-.like-container {
-  display: inline-flex;
+/* Modern Post Stats Styles */
+.post-stats {
+  display: flex;
+  justify-content: space-between;
   align-items: center;
+  padding: 12px 0;
+  border-top: 1px solid #f0f0f0;
+  margin-top: 16px;
+}
+
+.like-container {
+  display: flex;
+  align-items: center;
+  gap: 12px;
 }
 
 .like-button {
   background: none;
   border: none;
   cursor: pointer;
-  padding: 0;
-  margin-right: 4px;
+  padding: 8px;
+  border-radius: 50%;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  position: relative;
+  overflow: hidden;
+}
+
+.like-button::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: radial-gradient(circle, rgba(231, 76, 60, 0.1) 0%, transparent 70%);
+  border-radius: 50%;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.like-button:hover::before {
+  opacity: 1;
+}
+
+.like-button:hover {
+  transform: scale(1.1);
+}
+
+.like-button:active {
+  transform: scale(0.95);
 }
 
 .like-button:disabled {
   cursor: not-allowed;
-  opacity: 0.7;
+  opacity: 0.6;
+}
+
+.like-button.liked {
+  animation: likePulse 0.6s ease-out;
+}
+
+.like-button.liked .heart-icon {
+  color: #e74c3c;
+  filter: drop-shadow(0 0 8px rgba(231, 76, 60, 0.4));
 }
 
 .heart-icon {
-  font-size: 1.2rem;
-  transition: transform 0.2s;
+  font-size: 1.4rem;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  color: #666;
+  display: block;
+  position: relative;
+  z-index: 1;
 }
 
-.heart-icon:hover {
-  transform: scale(1.1);
-}
-
-.likes-count {
+.likes-count-button {
+  background: none;
+  border: none;
   cursor: pointer;
+  padding: 6px 12px;
+  border-radius: 20px;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  font-weight: 500;
+  font-size: 0.9rem;
+  color: #666;
+  position: relative;
+  overflow: hidden;
+}
+
+.likes-count-button::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, rgba(108, 92, 231, 0.1) 0%, rgba(108, 92, 231, 0.05) 100%);
+  border-radius: 20px;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.likes-count-button:hover::before {
+  opacity: 1;
+}
+
+.likes-count-button:hover {
+  color: #6c5ce7;
+  transform: translateY(-1px);
+}
+
+.likes-count-button:active {
+  transform: translateY(0) scale(0.98);
+}
+
+.likes-count-button:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.likes-count-text {
+  position: relative;
+  z-index: 1;
+}
+
+.other-stats {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.stat-item {
+  color: #666;
+  font-size: 0.9rem;
+  font-weight: 500;
+  transition: color 0.2s ease;
+  cursor: default;
+}
+
+.stat-item:hover {
   color: #333;
 }
 
-.likes-count:hover {
-  text-decoration: underline;
-  color: #6c5ce7;
+@keyframes likePulse {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.2);
+  }
+  100% {
+    transform: scale(1);
+  }
 }
 
 /* Likes Modal Styles */

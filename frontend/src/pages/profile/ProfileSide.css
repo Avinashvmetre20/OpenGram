@@ -38,7 +38,18 @@
   font-weight: bold;
   font-size: 1rem; /* Larger initial */
   border: 2px solid rgba(255, 255, 255, 0.3); /* Subtle border */
+  position: relative;
+  overflow: hidden;
 }
+
+.profile-avatar-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+}
+
+
 
 .profile-name {
   font-weight: 500;
@@ -130,7 +141,18 @@
   font-weight: bold;
   margin: 0 auto 1.25rem;
   border: 3px solid #e0e7ff; /* Light blue border */
+  position: relative;
+  overflow: hidden;
 }
+
+.user-avatar-large-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+}
+
+
 
 .user-name {
   font-size: 1.375rem; /* 22px */

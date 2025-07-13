@@ -22,7 +22,7 @@ app.use(cors(corsOptions));
 app.use("/auth",router);
 app.use("/post",postRouter);
 
-const PORT = process.env.PORT
+const PORT = process.env.PORT || 8080
 app.listen(PORT,()=>{
     mongoDB();
     console.log(`Server is running on ${PORT}`)

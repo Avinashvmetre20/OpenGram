@@ -194,3 +194,124 @@ exports.updatePassword = async (req, res) => {
     });
   }
 };
+
+// Follow a user
+exports.followUser = async (req, res) => {
+  try {
+    const userToFollow = await User.findById(req.params.id);
+    const currentUser = await User.findById(req.user.id);
+
+    if (!userToFollow || !currentUser) {
+      return res.status(404).json({ success: false, error: 'User not found' });
+    }
+    if (userToFollow._id.equals(currentUser._id)) {
+      return res.status(400).json({ success: false, error: 'Cannot follow yourself' });
+    }
+    if (currentUser.following.includes(userToFollow._id)) {
+      return res.status(400).json({ success: false, error: 'Already following' });
+    }
+
+    currentUser.following.push(userToFollow._id);
+    userToFollow.followers.push(currentUser._id);
+
+    await currentUser.save();
+    await userToFollow.save();
+
+    res.status(200).json({ success: true });
+  } catch (err) {
+    res.status(500).json({ success: false, error: 'Server error' });
+  }
+};
+
+// Unfollow a user
+exports.unfollowUser = async (req, res) => {
+  try {
+    const userToUnfollow = await User.findById(req.params.id);
+    const currentUser = await User.findById(req.user.id);
+
+    if (!userToUnfollow || !currentUser) {
+      return res.status(404).json({ success: false, error: 'User not found' });
+    }
+    if (userToUnfollow._id.equals(currentUser._id)) {
+      return res.status(400).json({ success: false, error: 'Cannot unfollow yourself' });
+    }
+    if (!currentUser.following.includes(userToUnfollow._id)) {
+      return res.status(400).json({ success: false, error: 'Not following' });
+    }
+
+    currentUser.following = currentUser.following.filter(
+      (id) => !id.equals(userToUnfollow._id)
+    );
+    userToUnfollow.followers = userToUnfollow.followers.filter(
+      (id) => !id.equals(currentUser._id)
+    );
+
+    await currentUser.save();
+    await userToUnfollow.save();
+
+    res.status(200).json({ success: true });
+  } catch (err) {
+    res.status(500).json({ success: false, error: 'Server error' });
+  }
+};
+
+// Get user's followers
+exports.getFollowers = async (req, res) => {
+  try {
+    const user = await User.findById(req.params.id)
+      .populate('followers', 'username profilePicture bio')
+      .select('followers');
+
+    if (!user) {
+      return res.status(404).json({ success: false, error: 'User not found' });
+    }
+
+    res.status(200).json({
+      success: true,
+      data: user.followers
+    });
+  } catch (err) {
+    res.status(500).json({ success: false, error: 'Server error' });
+  }
+};
+
+// Get user's following
+exports.getFollowing = async (req, res) => {
+  try {
+    const user = await User.findById(req.params.id)
+      .populate('following', 'username profilePicture bio')
+      .select('following');
+
+    if (!user) {
+      return res.status(404).json({ success: false, error: 'User not found' });
+    }
+
+    res.status(200).json({
+      success: true,
+      data: user.following
+    });
+  } catch (err) {
+    res.status(500).json({ success: false, error: 'Server error' });
+  }
+};
+
+// Check if current user is following another user
+exports.getFollowStatus = async (req, res) => {
+  try {
+    const currentUser = await User.findById(req.user.id);
+    const targetUser = await User.findById(req.params.id);
+
+    if (!currentUser || !targetUser) {
+      return res.status(404).json({ success: false, error: 'User not found' });
+    }
+
+    const isFollowing = currentUser.following.includes(targetUser._id);
+
+    res.status(200).json({
+      success: true,
+      data: { isFollowing }
+    });
+  } catch (err) {
+    res.status(500).json({ success: false, error: 'Server error' });
+  }
+};

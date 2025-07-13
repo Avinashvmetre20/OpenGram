@@ -28,7 +28,6 @@ const likePost = async (postId) => {
     });
     return response.data;
   } catch (error) {
-    console.error('Error liking post:', error);
     throw error;
   }
 };
@@ -43,7 +42,6 @@ const unlikePost = async (postId) => {
     });
     return response.data;
   } catch (error) {
-    console.error('Error unliking post:', error);
     throw error;
   }
 };
@@ -58,7 +56,6 @@ const getPostLikes = async (postId) => {
     });
     return response.data;
   } catch (error) {
-    console.error('Error fetching post likes:', error);
     throw error;
   }
 };

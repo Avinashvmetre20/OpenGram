@@ -1,0 +1,9 @@
+export { default as PostCard } from './PostCard';
+export { default as PostHeader } from './PostHeader';
+export { default as PostContent } from './PostContent';
+export { default as MediaCarousel } from './MediaCarousel';
+export { default as PostStats } from './PostStats';
+export { default as CommentsPreview } from './CommentsPreview';
+export { default as PostMeta } from './PostMeta';
+export { default as LikesModal } from './LikesModal';
+export { default as Pagination } from './Pagination'; 
