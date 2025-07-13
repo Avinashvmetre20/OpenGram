@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { postService } from '../../services/postService';
 import authService from '../../services/authService';
+import download from '../../assets/download.jpeg'
 import './PostPage.css'; // optional: for styling
 
 const PostPage = () => {
@@ -260,7 +261,7 @@ const PostPage = () => {
                       <div className="comment-user-info">
                         {comment.user.profilePicture ? (
                           <img
-                            src={comment.user.profilePicture}
+                            src={comment.user.profilePicture || download}
                             alt="Commenter"
                             className="avatar-small"
                             onError={(e) => {
@@ -318,7 +319,7 @@ const PostPage = () => {
                     currentPostLikes.map(user => (
                       <div key={user._id} className="like-user">
                         <img
-                          src={user.profilePicture || 'https://via.placeholder.com/150'}
+                          src={user.profilePicture || download}
                           alt={user.username}
                           className="like-user-avatar"
                           onError={(e) => {
